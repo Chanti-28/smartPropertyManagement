@@ -1,0 +1,66 @@
+name: CI-CD Smart Property
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  ci:
+    name: Run tests and security checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies + tools
+        run: |
+          pip install -r requirements.txt
+          pip install flake8 bandit
+
+      - name: Lint with flake8
+        run: |
+          flake8 app.py
+
+      - name: Security scan with bandit
+        run: |
+          bandit -r .
+
+  deploy:
+    name: Deploy to EC2 over SSH
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start SSH agent and add key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy latest code to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+
+            cd /var/www/smart_property/smartPropertyManagement
+
+            if [ ! -d .git ]; then
+              sudo rm -rf /var/www/smart_property/smartPropertyManagement/*
+              git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git .
+            else
+              git pull
+            fi
+
+            pip3 install --user -r requirements.txt
+
+            sudo systemctl daemon-reload
+            sudo systemctl restart smart_property
+          EOF
