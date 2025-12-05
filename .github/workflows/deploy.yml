@@ -2,7 +2,7 @@ name: CI-CD Smart Property
 
 on:
   push:
-    branches: [ main ]   # change to 'master' if your default branch is master
+    branches: [ main ]   # change to 'master' if your repo uses master
 
 jobs:
   ci:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy latest code to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@54.158.147.25 << 'EOF'
             set -e
 
             # Ensure base directory exists
