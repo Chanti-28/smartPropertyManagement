@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Smart Property Management EC2 instance (Amazon Linux 2023, t3.micro)
+  for Flask-based Smart Cloud Property app.
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC where the instance will run (use your default VPC).
+
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet in the selected VPC (use a default subnet).
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: PravalikaSmartProperty
+    Description: Name of an existing EC2 KeyPair to enable SSH access.
+
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - t3.medium
+    Description: EC2 instance type.
+
+  AmiId:
+    Type: AWS::EC2::Image::Id
+    Default: ami-0fa3fe0fa7920f68e
+    Description: Amazon Linux 2023 AMI in us-east-1 (update if needed).
+
+  SSHLocation:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: The IP range that can SSH to the EC2 instance.
+
+Resources:
+  SmartPropertySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Smart Property EC2 instance
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        # SSH
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+        # HTTP (web app)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SmartProperty-SG
+
+  SmartPropertyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          GroupSet:
+            - !Ref SmartPropertySecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8          # 8 GiB
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: SmartProperty-EC2
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y python3 python3-pip git nginx
+          systemctl enable nginx
+          systemctl start nginx
+
+          # TODO: later we will:
+          # - git clone your repo
+          # - pip install -r requirements.txt
+          # - run gunicorn + configure nginx
+
+Outputs:
+  InstanceId:
+    Description: ID of the Smart Property EC2 instance
+    Value: !Ref SmartPropertyInstance
+
+  InstancePublicIP:
+    Description: Public IP address of the instance
+    Value: !GetAtt SmartPropertyInstance.PublicIp
+
+  SecurityGroupId:
+    Description: Security group ID for the instance
+    Value: !Ref SmartPropertySecurityGroup

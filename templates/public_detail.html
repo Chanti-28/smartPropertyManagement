@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container my-4">
+  <div class="row">
+    <!-- Image side -->
+    <div class="col-lg-7 mb-3">
+      {% if prop.image_filename %}
+        <img
+          src="{{ url_for('uploaded_file', filename=prop.image_filename) }}"
+          class="img-fluid rounded shadow-sm w-100"
+          style="max-height: 380px; object-fit: cover;"
+          alt="{{ prop.title }}"
+        >
+      {% else %}
+        <img
+          src="{{ url_for('static', filename='noimage.jpg') }}"
+          class="img-fluid rounded shadow-sm w-100"
+          style="max-height: 380px; object-fit: cover;"
+          alt="No image"
+        >
+      {% endif %}
+    </div>
+
+    <!-- Details side -->
+    <div class="col-lg-5">
+      <h2 class="fw-bold text-primary mb-2">{{ prop.title }}</h2>
+
+      <p class="text-muted mb-1">
+        <strong>Location:</strong>
+        {{ prop.short_address or prop.city }}
+      </p>
+
+      <p class="mb-1">
+        <strong>City:</strong> {{ prop.city }}
+      </p>
+
+      <p class="mb-2">
+        <strong>Monthly rent:</strong>
+        <span class="fw-semibold text-success">
+          €{{ "%.2f"|format(prop.monthly_rent) }} / month
+        </span>
+      </p>
+
+      <p class="mb-2">
+        <strong>Status:</strong>
+        {% if prop.status == "Available" %}
+          <span class="badge bg-success">Available</span>
+        {% else %}
+          <span class="badge bg-secondary">{{ prop.status }}</span>
+        {% endif %}
+      </p>
+
+      <p class="small text-muted mb-3">
+        Full address and owner contact details will be shared after your booking
+        is confirmed.
+      </p>
+
+      <hr>
+
+      <p class="mb-3">
+        {{ prop.description }}
+      </p>
+
+      {% if prop.status == "Available" %}
+        <div class="d-grid gap-2">
+          <a
+            href="{{ url_for('public_book', property_id=prop.id) }}"
+            class="btn btn-primary"
+          >
+            Book Now
+          </a>
+          <a
+            href="{{ url_for('public_enquire', property_id=prop.id) }}"
+            class="btn btn-outline-primary"
+          >
+            Send Enquiry
+          </a>
+        </div>
+      {% else %}
+        <div class="alert alert-warning mt-2">
+          This property is currently not available for booking.
+        </div>
+      {% endif %}
+
+      <a
+        href="{{ url_for('public_properties') }}"
+        class="btn btn-link w-100 mt-3"
+      >
+        &larr; Back to all properties
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

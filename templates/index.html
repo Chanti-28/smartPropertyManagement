@@ -16,7 +16,9 @@
     <div class="col-md-6">
       <div class="card shadow-sm border-0 cloud-mini-card h-100">
         {% if prop.image_filename %}
-        <img src="{{ url_for('uploaded_file', filename=prop.image_filename) }}" class="card-img-top property-thumb" alt="{{ prop.title }}">
+        <img src="{{ url_for('uploaded_file', filename=prop.image_filename) }}"
+             class="card-img-top property-thumb"
+             alt="{{ prop.title }}">
         {% else %}
         <div class="property-thumb-placeholder text-center d-flex align-items-center justify-content-center">
           <span class="display-6">🏙️</span>
@@ -29,11 +31,24 @@
           </p>
           <p class="card-text mb-2">
             <span class="badge bg-info text-dark me-1">{{ prop.status }}</span>
-            <span class="badge bg-light text-dark">€{{ '%.2f'|format(prop.monthly_rent) }}/month</span>
+            <span class="badge bg-light text-dark">
+              €{{ '%.2f'|format(prop.monthly_rent) }}/month
+            </span>
           </p>
-          <a href="{{ url_for('property_detail', property_id=prop.id) }}" class="btn btn-sm btn-outline-primary">
-            View details
-          </a>
+
+          <div class="d-flex flex-wrap gap-2">
+            <!-- NEW: Public page (with Enquiry + Book Now) -->
+            <a href="{{ url_for('public_property_detail', property_id=prop.id) }}"
+               class="btn btn-sm btn-outline-primary">
+              View public page
+            </a>
+
+            <!-- Existing: owner manage page -->
+            <a href="{{ url_for('property_detail', property_id=prop.id) }}"
+               class="btn btn-sm btn-outline-secondary">
+              Manage (edit / delete)
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +57,9 @@
 {% else %}
   <div class="text-center py-5">
     <p class="lead mb-2">No properties yet.</p>
-    <p class="text-muted mb-4">Start by adding your first smart property to the cloud.</p>
+    <p class="text-muted mb-4">
+      Start by adding your first smart property to the cloud.
+    </p>
     <a href="{{ url_for('create_property') }}" class="btn btn-primary cloud-btn">
       + Add Property
     </a>

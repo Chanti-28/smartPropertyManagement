@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body text-center">
+          <div class="mb-3" style="font-size: 3rem;">✅</div>
+          <h3 class="text-success mb-2">Booking Confirmed!</h3>
+          <p class="text-muted mb-0">
+            Thank you, <strong>{{ booking.guest_name }}</strong>. Your booking for:
+          </p>
+          <p class="fw-semibold mb-0">
+            “{{ prop.title }}”
+          </p>
+          <p class="text-muted">
+            on <strong>{{ booking.move_in_date.strftime("%Y-%m-%d") }}</strong> is confirmed.
+          </p>
+        </div>
+      </div>
+
+      <!-- Full address + contact -->
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h5 class="text-primary mb-3">Property details</h5>
+
+          <p class="mb-1">
+            <strong>Full address:</strong><br>
+            {{ prop.address }}<br>
+            {{ prop.city }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Monthly rent:</strong>
+            €{{ "%.2f"|format(prop.monthly_rent) }} / month
+          </p>
+
+          <p class="mb-3">
+            <strong>Current status:</strong>
+            <span class="badge bg-secondary">{{ prop.status }}</span>
+          </p>
+
+          <hr>
+
+          <h6 class="text-primary">Owner contact</h6>
+          {% if prop.contact_phone or prop.contact_email %}
+            {% if prop.contact_phone %}
+              <p class="mb-1">
+                📞 <strong>Phone:</strong> {{ prop.contact_phone }}
+              </p>
+            {% endif %}
+            {% if prop.contact_email %}
+              <p class="mb-0">
+                📧 <strong>Email:</strong> {{ prop.contact_email }}
+              </p>
+            {% endif %}
+          {% else %}
+            <p class="text-muted mb-0">
+              Contact details will be shared with you shortly by the property manager.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Next steps message -->
+      <div class="alert alert-info">
+        <strong>Next steps:</strong><br>
+        Please contact the owner to:
+        <ul class="mb-0 mt-1">
+          <li>Arrange payment</li>
+          <li>Confirm move-in time</li>
+          <li>Collect keys at the property</li>
+        </ul>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <a href="{{ url_for('public_properties') }}" class="btn btn-outline-secondary">
+          ← Back to all properties
+        </a>
+        <a href="{{ url_for('home') }}" class="btn btn-primary cloud-btn">
+          Go to homepage
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
