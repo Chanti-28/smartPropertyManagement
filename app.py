@@ -614,7 +614,8 @@
 #         db.create_all()
 #     app.run(host="127.0.0.1", port=5000)
 import os
-from datetime import datetime, date
+from datetime import datetime
+
 
 from flask import (
     Flask,
