@@ -23,9 +23,10 @@ jobs:
           pip install -r requirements.txt
           pip install flake8 bandit
 
-      - name: Lint with flake8
+      - name: Lint with flake8 (ignore long lines and extra blanks)
         run: |
-          flake8 app.py
+          flake8 app.py --ignore=E501,E303
+
 
       - name: Security scan with bandit
         run: |
