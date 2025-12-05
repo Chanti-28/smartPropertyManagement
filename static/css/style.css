@@ -1,0 +1,62 @@
+body.cloud-bg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0d6efd 0%, #63b3ff 40%, #eef6ff 100%);
+  background-attachment: fixed;
+}
+
+.cloud-navbar {
+  background: linear-gradient(90deg, #0b5ed7, #0dcaf0);
+}
+
+.cloud-card {
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+}
+
+.cloud-mini-card {
+  border-radius: 1rem;
+}
+
+.cloud-form input,
+.cloud-form textarea,
+.cloud-form select {
+  border-radius: 0.75rem;
+}
+
+.cloud-btn {
+  background: linear-gradient(90deg, #0d6efd, #0ea5e9);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(13, 110, 253, 0.35);
+}
+
+.cloud-btn:hover {
+  filter: brightness(0.95);
+}
+
+.cloud-register-btn {
+  border-radius: 999px;
+}
+
+.property-thumb {
+  height: 180px;
+  object-fit: cover;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.property-thumb-placeholder {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.18), rgba(13, 202, 240, 0.18));
+  height: 180px;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.property-detail-placeholder {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.18), rgba(13, 202, 240, 0.18));
+  height: 260px;
+  border-radius: 1.5rem;
+}
+
+footer {
+  color: rgba(255, 255, 255, 0.8);
+}
