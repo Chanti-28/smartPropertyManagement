@@ -138,11 +138,13 @@ jobs:
               cd smartPropertyManagement
             else
               cd smartPropertyManagement
-              git pull
+              # ⚠️ reset any local changes (e.g. modified property_app.db) before pulling
+              git reset --hard HEAD
+              git pull origin main
             fi
 
-            # Install Python dependencies
-            pip3 install -r requirements.txt
+            # Install Python dependencies (system-wide for gunicorn / python3)
+            sudo pip3 install -r requirements.txt
 
             # Restart application
             sudo systemctl daemon-reload
