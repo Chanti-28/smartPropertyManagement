@@ -11,23 +11,41 @@
   <body class="cloud-bg">
     <nav class="navbar navbar-expand-lg navbar-dark cloud-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="{{ url_for('index') if current_user else url_for('login') }}">
+        <!-- Brand always goes to PUBLIC home -->
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
           ☁️ Smart Cloud Property
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navCloud" aria-controls="navCloud" aria-expanded="false" aria-label="Toggle navigation">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navCloud" aria-controls="navCloud"
+                aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navCloud">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- Public link: always visible -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('public_properties') }}">
+                Browse Properties
+              </a>
+            </li>
+
+            <!-- Owner-only links -->
             {% if current_user %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('index') }}">My Properties</a>
+              <a class="nav-link" href="{{ url_for('index') }}">
+                My Properties
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('create_property') }}">Add Property</a>
+              <a class="nav-link" href="{{ url_for('create_property') }}">
+                Add Property
+              </a>
             </li>
             {% endif %}
           </ul>
+
           <ul class="navbar-nav ms-auto">
             {% if current_user %}
             <li class="nav-item">
@@ -36,14 +54,20 @@
               </span>
             </li>
             <li class="nav-item">
-              <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Logout</a>
+              <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">
+                Logout
+              </a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="btn btn-outline-light btn-sm me-2" href="{{ url_for('login') }}">Login</a>
+              <a class="btn btn-outline-light btn-sm me-2" href="{{ url_for('login') }}">
+                Owner Login
+              </a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-light btn-sm cloud-register-btn" href="{{ url_for('register') }}">Register</a>
+              <a class="btn btn-light btn-sm cloud-register-btn" href="{{ url_for('register') }}">
+                Register
+              </a>
             </li>
             {% endif %}
           </ul>
