@@ -25,18 +25,24 @@
 
     <p class="mb-2">
       <span class="badge bg-info text-dark me-2">{{ prop.status }}</span>
-      <span class="badge bg-light text-dark">
-        €{{ '%.2f'|format(prop.Yearly_rent) }}/year
-      </span>
+      {% if prop.Yearly_rent is not none %}
+        <span class="badge bg-light text-dark">
+          €{{ '%.2f'|format((prop.Yearly_rent | float) / 12) }}/month
+        </span>
+      {% else %}
+        <span class="badge bg-light text-dark">Rent not set</span>
+      {% endif %}
     </p>
 
     <p class="mb-3">
       {{ prop.description }}
     </p>
 
-    <p class="small text-muted">
-      Created at {{ prop.created_at.strftime("%Y-%m-%d %H:%M") }}
-    </p>
+    {% if prop.created_at %}
+      <p class="small text-muted">
+        Created at {{ prop.created_at.strftime("%Y-%m-%d %H:%M") }}
+      </p>
+    {% endif %}
 
     <hr>
 
